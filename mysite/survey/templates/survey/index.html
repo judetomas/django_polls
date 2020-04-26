@@ -1,16 +1,16 @@
 <h1>survey app</h1>
 {% if latest_question_list %}
-  <ol type="1">
-    {% for question in latest_question_list %}
+  <form action="/survey/process" method="post">
+    {% csrf_token %}
+    <ol type="1">
+      {% for question in latest_question_list %}
         <li>{{ question.question_text }}</li>
-        <form action="/action_page.php" method="POST">
-        {% csrf_token %}
         {% for answer in question.answer_set.all %}
-          <input type="radio" name="answer" id="answer{{ forloop.counter }}" value="{{ answer.id }}">
-          <label for="answer{{ forloop.counter }}">{{ answer.answer_text }}</label><br>
+          <input type="radio" name="question{{ question.id }} " id="answer{{ answer.id }}" value="{{ answer.id }}">
+          <label for="answer{{ answer.id }}">{{ answer.answer_text }}</label><br>
         {% endfor %}
-        </form>
-    {% endfor %}
+      {% endfor %}
+    </ol>  
     <input type="submit" value="Submit">
-  </ol>  
+  </form>
 {% endif %}
