@@ -6,7 +6,7 @@
       {% for question in latest_question_list %}
         <li>{{ question.question_text }}</li>
         {% for answer in question.answer_set.all %}
-          <input type="radio" name="question{{ question.id }} " id="answer{{ answer.id }}" value="{{ answer.id }}">
+          <input type="radio" name="question{{ question.id }}" id="answer{{ answer.id }}" value="{{ answer.id }}">
           <label for="answer{{ answer.id }}">{{ answer.answer_text }}</label><br>
         {% endfor %}
       {% endfor %}
