@@ -16,8 +16,8 @@ def process(request):
     ns = 0
     tf = 0
     pj = 0
-    for i in range(len(Question.objects.all())):
-        user_input = request.POST.get('question' + str(i+1), False)
+    for question in Question.objects.all():
+        user_input = request.POST.get('question' + str(question.id), False)
         user_answer = Answer.objects.get(pk=user_input)
         user_answer_type = user_answer.answer_type
         if user_answer_type == 'E':
@@ -36,5 +36,27 @@ def process(request):
             pj += 1
         elif user_answer_type == 'J':
             pj -= 1
-        print(user_answer)
-    return "Hi!"
+        
+    return HttpResponseRedirect(reverse('survey:results', args = [ei]))
+
+def results(request, eicount):
+    mbti_result = "ENTP"
+    '''
+    if ei >= 0:
+        mbti_result += "E"
+    else:
+        mbti_result += "I"
+    if ns >=0:
+        mbti_result += "N"
+    else:
+        mbti_result += "S"
+    if tf >= 0:
+        mbti_result += "T"
+    else:
+        mbti_result += "F"
+    if pj >= 0:
+        mbti_result += "P"
+    else:
+        mbti_result += "J"
+    '''
+    return render(request, 'survey/results.html')
