@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 
-from .models import Answer, Question
+from .models import Answer, Question, Result
 
 
 def index(request):
@@ -17,6 +17,7 @@ def process(request):
     tf = 0
     pj = 0
     for question in Question.objects.all():
+        mbti_result = ""
         user_input = request.POST.get('question' + str(question.id), False)
         user_answer = Answer.objects.get(pk=user_input)
         user_answer_type = user_answer.answer_type
@@ -37,11 +38,6 @@ def process(request):
         elif user_answer_type == 'J':
             pj -= 1
         
-    return HttpResponseRedirect(reverse('survey:results', args = [ei]))
-
-def results(request, eicount):
-    mbti_result = "ENTP"
-    '''
     if ei >= 0:
         mbti_result += "E"
     else:
@@ -57,6 +53,15 @@ def results(request, eicount):
     if pj >= 0:
         mbti_result += "P"
     else:
-        mbti_result += "J"
-    '''
-    return render(request, 'survey/results.html')
+        mbti_result += "J"    
+    
+    user_result = Result(result_text = mbti_result)
+    user_result.save()
+    user_result.id
+        
+    return HttpResponseRedirect(reverse('survey:results', args = [user_result.id]))
+
+def results(request, result_id):
+    mbti_result = Result.objects.get(pk=result_id)
+    
+    return render(request, 'survey/results.html', {'result': mbti_result})
